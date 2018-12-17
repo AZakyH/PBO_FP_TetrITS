@@ -1,16 +1,20 @@
 #include "Board.h"
 #include "Tetris.h"
+#include "IniWindow.h"
 
 Board::Board(wxWindow *window, wxSize panel, wxFrame *parent)
 	: wxPanel(window, wxID_ANY, wxPoint(0, 0), panel, wxBORDER_NONE)
 {
+	pWindow = (IniWindow*)window;
+
 	//membaca file JPEG untuk Background
 	wxImageHandler *jpegLoader = new wxJPEGHandler();
 	wxImage::AddHandler(jpegLoader);
 
 	timer = new wxTimer(this, 1);
-
+	
 	m_stsbar = parent->GetStatusBar();
+	m_stsbar->SetStatusText("0");
 	isFallingFinished = false;
 	isStarted = false;
 	isPaused = false;
@@ -37,12 +41,11 @@ Board::Board(wxWindow *window, wxSize panel, wxFrame *parent)
 	Connect(wxEVT_TIMER, wxCommandEventHandler(Board::OnTimer));
 }
 
-
 void Board::Start()
 {
 	LoadGameBG();
 	Connect(wxEVT_PAINT, wxPaintEventHandler(Board::OnPaint));
-	
+
 	if (isPaused)
 		return;
 
@@ -75,23 +78,18 @@ void Board::Pause()
 
 void Board::LoadGameBG()
 {
-	wxMessageOutputDebug().Printf("NILAI SKILL %d", skill);
-
 	if (skill == 0)
 	{
-		wxMessageOutputDebug().Printf("ELIIII");
 		wxImage gameBGImage(wxT("ElizabethBG.jpg"), wxBITMAP_TYPE_JPEG);
 		gameBackGround = new wxBitmap(gameBGImage);
 	}
 	else if (skill == 1)
 	{
-		wxMessageOutputDebug().Printf("PIKAAAA");
 		wxImage gameBGImage(wxT("PikachuBG.jpg"), wxBITMAP_TYPE_JPEG);
 		gameBackGround = new wxBitmap(gameBGImage);
 	}
 	else
 	{
-		wxMessageOutputDebug().Printf("HAMTAA");
 		wxImage gameBGImage(wxT("HamtaroBG.jpg"), wxBITMAP_TYPE_JPEG);
 		gameBackGround = new wxBitmap(gameBGImage);
 	}
@@ -138,7 +136,7 @@ void Board::DrawSquare(wxPaintDC& dc, int x, int y, Blocks shape)
 		wxColour(0, 240, 0), wxColour(0, 240, 240),
 		wxColour(160, 0, 240), wxColour(240, 240, 0),
 		wxColour(240, 160, 0), wxColour(0, 0, 240), wxColour(100, 100, 100) };
-
+	
 	static wxColour light[] = { wxColour(0, 0, 0), wxColour(251, 179, 179),
 		wxColour(179, 251, 179), wxColour(179, 251, 251),
 		wxColour(227, 179, 251), wxColour(251, 251, 179),
@@ -221,7 +219,6 @@ void Board::OnKeyDown(wxKeyEvent& event)
 	default:
 		event.Skip();
 	}
-
 }
 
 void Board::OnTimer(wxCommandEvent& event)
@@ -371,6 +368,7 @@ void Board::NewPiece()
 		timer->Stop();
 		isStarted = false;
 		m_stsbar->SetStatusText(wxT("game over"));
+		pWindow->ShowGameOver();
 	}
 }
 

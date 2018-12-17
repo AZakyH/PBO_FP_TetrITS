@@ -5,6 +5,7 @@
 #include <wx/wx.h>
 
 class Tetris;
+class IniWindow;
 
 class Board : public wxPanel
 {
@@ -65,6 +66,8 @@ private:
 
 	wxBitmap* gameBackGround = nullptr;
 	void LoadGameBG();
+
+	IniWindow* pWindow;
 };
 
 #endif

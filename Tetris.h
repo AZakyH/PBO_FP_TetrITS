@@ -7,6 +7,7 @@ class Tetris : public wxFrame
 {
 public:
 	Tetris(const wxString& title);
+	wxStatusBar *sb = CreateStatusBar();
 private:
 	IniWindow *window;
 };

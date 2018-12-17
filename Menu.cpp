@@ -68,7 +68,6 @@ void Menu::OnPaint(wxPaintEvent &event)
 
 void Menu::SinglePButton(wxCommandEvent& event)
 {
-	wxMessageOutputDebug().Printf("Masuk ke SinglePButton");
 	pWindow->ShowCharMenu();
 }
 

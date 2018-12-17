@@ -24,6 +24,10 @@ void IniWindow::ShowMenu()
 	menu = new Menu(this, wxSize(820, 992), tetris);
 	menu->SetPosition(wxPoint(0, 0));
 	menu->Show(true);
+	if (board != nullptr) {board->Show(false);}
+	if (character != nullptr) {character->Show(false);}
+	if (gameover != nullptr) { gameover->Show(false); }
+	tetris->sb->SetStatusText(wxT("Let's Play!"));
 }
 
 void IniWindow::ShowGame()
@@ -42,6 +46,16 @@ void IniWindow::ShowCharMenu()
 	character->SetPosition(wxPoint(0, 0));
 	character->Show(true);
 	menu->Show(false);
+}
+
+void IniWindow::ShowGameOver()
+{
+	gameover = new GameOver(this, wxSize(820, 992), tetris);
+	gameover->SetPosition(wxPoint(0, 0));
+	gameover->Show(true);
+	if (board != nullptr) {board->Show(false);}
+	if (character != nullptr) {character->Show(false);}
+	if (menu != nullptr) {menu->Show(false);}
 }
 
 void IniWindow::SetChar(int character)

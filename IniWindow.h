@@ -2,6 +2,7 @@
 #include "Board.h"
 #include "Menu.h"
 #include "Character.h"
+#include "GameOver.h"
 
 class Tetris;
 
@@ -11,6 +12,7 @@ private:
 	Tetris* tetris; 
 	Menu* menu;
 	Character* character;
+	GameOver* gameover;
 public:
 	IniWindow(wxFrame *parent);
 	~IniWindow();
@@ -20,5 +22,6 @@ public:
 	void ShowMenu();
 	void ShowGame();
 	void ShowCharMenu();
+	void ShowGameOver();
 };
 
