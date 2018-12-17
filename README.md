@@ -1,2 +1,3 @@
 # PBO_FP_TertITS
-Final project of Object Oriented Programming course. A modification from [this code](http://zetcode.com/gui/wxwidgets/thetetrisgame/)
+Modified Tetris game for Final project of Object Oriented Programming course.
+Reference taken from [this code](http://zetcode.com/gui/wxwidgets/thetetrisgame/).
