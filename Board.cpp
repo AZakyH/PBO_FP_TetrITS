@@ -5,14 +5,16 @@
 Board::Board(wxWindow *window, wxSize panel, wxFrame *parent)
 	: wxPanel(window, wxID_ANY, wxPoint(0, 0), panel, wxBORDER_NONE)
 {
+	wxMessageOutputDebug().Printf("Board instantiated");
+
 	pWindow = (IniWindow*)window;
 
 	//membaca file JPEG untuk Background
-	wxImageHandler *jpegLoader = new wxJPEGHandler();
-	wxImage::AddHandler(jpegLoader);
+	//wxImageHandler *jpegLoader = new wxJPEGHandler();
+	//wxImage::AddHandler(jpegLoader);
 
 	timer = new wxTimer(this, 1);
-	
+	wxMessageOutputDebug().Printf("Timer?");
 	m_stsbar = parent->GetStatusBar();
 	m_stsbar->SetStatusText("0");
 	isFallingFinished = false;
@@ -52,6 +54,7 @@ void Board::Start()
 	isStarted = true;
 	isFallingFinished = false;
 	numLinesRemoved = 0;
+	holdPiece.SetShape(NoShape);
 	ClearBoard();
 
 	NewPiece();
@@ -66,7 +69,7 @@ void Board::Pause()
 	isPaused = !isPaused;
 	if (isPaused) {
 		timer->Stop();
-		m_stsbar->SetStatusText(wxT("paused"));
+		m_stsbar->SetStatusText(wxT("Game is paused"));
 	}
 	else {
 		timer->Start(gameTime);
@@ -109,7 +112,6 @@ void Board::OnPaint(wxPaintEvent& event)
 	wxSize size = GetClientSize();
 	int boardTop = size.GetHeight() - BoardHeight * SquareHeight();
 
-
 	for (int i = 0; i < BoardHeight; ++i) {
 		for (int j = 0; j < BoardWidth; ++j) {
 			Blocks shape = ShapeAt(j, BoardHeight - i - 1);
@@ -128,6 +130,19 @@ void Board::OnPaint(wxPaintEvent& event)
 				curPiece.GetShape());
 		}
 	}
+
+	int newY = GhostFunction();
+	//GhostFunction(newY);
+	for (int i = 0; i < 4; ++i) {
+		int x = curX + curPiece.x(i);
+		int y = newY - curPiece.y(i);
+		Blocks shape = ShapeAt(x, y);
+		if (shape == NoShape) {
+			DrawSquare(dc, 0 + x * SquareWidth(),
+				boardTop + (BoardHeight - y - 1) * SquareHeight(),
+				GhostShape);
+		}
+	}
 }
 
 void Board::DrawSquare(wxPaintDC& dc, int x, int y, Blocks shape)
@@ -135,17 +150,20 @@ void Board::DrawSquare(wxPaintDC& dc, int x, int y, Blocks shape)
 	static wxColour colors[] = { wxColour(0, 0, 0), wxColour(240, 0, 0),
 		wxColour(0, 240, 0), wxColour(0, 240, 240),
 		wxColour(160, 0, 240), wxColour(240, 240, 0),
-		wxColour(240, 160, 0), wxColour(0, 0, 240), wxColour(100, 100, 100) };
+		wxColour(240, 160, 0), wxColour(0, 0, 240), wxColour(100, 100, 100),
+		wxColour(198, 202, 209)};
 	
 	static wxColour light[] = { wxColour(0, 0, 0), wxColour(251, 179, 179),
 		wxColour(179, 251, 179), wxColour(179, 251, 251),
 		wxColour(227, 179, 251), wxColour(251, 251, 179),
-		wxColour(251, 227, 179), wxColour(179, 179, 251), wxColour(150, 150, 150) };
+		wxColour(251, 227, 179), wxColour(179, 179, 251), wxColour(150, 150, 150),
+		wxColour(242, 245, 252) };
 
 	static wxColour dark[] = { wxColour(0, 0, 0), wxColour(120, 0, 0),
 		wxColour(0, 120, 0), wxColour(0, 120, 120),
 		wxColour(80, 0, 120), wxColour(120, 120, 0),
-		wxColour(120, 80, 0), wxColour(0, 0, 120), wxColour(50, 50, 50) };
+		wxColour(120, 80, 0), wxColour(0, 0, 120), wxColour(50, 50, 50),
+		wxColour(164, 167, 173) };
 
 	wxPen pen(light[int(shape)]);
 	pen.SetCap(wxCAP_PROJECTING);
@@ -214,6 +232,7 @@ void Board::OnKeyDown(wxKeyEvent& event)
 		if (!isHold) {
 			isHold = true;
 			NewPiece();
+			pWindow->legend->Refresh();
 		}
 		break;
 	default:
@@ -367,10 +386,36 @@ void Board::NewPiece()
 		curPiece.SetShape(NoShape);
 		timer->Stop();
 		isStarted = false;
-		m_stsbar->SetStatusText(wxT("game over"));
+		wxString str;
+		str.Printf(wxT("Game Over, your score is %d"), numLinesRemoved);
+		m_stsbar->SetStatusText(str);
 		pWindow->ShowGameOver();
 	}
 }
+
+int Board::GhostFunction() {
+	int newY = curY - 1 - (curPiece.MaxY() - curPiece.MinY());
+	int temp;
+	bool detection = false;
+	while (newY > 0) {
+		temp = newY;
+		for (int i = 0; i < 4; ++i) {
+			int x = curX + curPiece.x(i);
+			int y = temp - curPiece.y(i);
+			Blocks shape = ShapeAt(x, y - 1);
+			if (shape != NoShape || y < 1) {
+				detection = true;
+				break;
+			}
+		}
+		if (detection) {
+			break;
+		}
+		newY--;
+	}
+	return newY;
+}
+
 
 bool Board::TryMove(const Shape& newPiece, int newX, int newY)
 {

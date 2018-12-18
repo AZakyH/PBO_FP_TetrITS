@@ -3,7 +3,7 @@
 
 enum Blocks {
 	NoShape, ZShape, SShape, LineShape,
-	TShape, SquareShape, LShape, MirroredLShape, ExtraShape
+	TShape, SquareShape, LShape, MirroredLShape, ExtraShape, GhostShape
 };
 
 class Shape

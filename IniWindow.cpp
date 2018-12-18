@@ -27,6 +27,7 @@ void IniWindow::ShowMenu()
 	if (board != nullptr) {board->Show(false);}
 	if (character != nullptr) {character->Show(false);}
 	if (gameover != nullptr) { gameover->Show(false); }
+	if (legend != nullptr) { legend->Show(false); }
 	tetris->sb->SetStatusText(wxT("Let's Play!"));
 }
 
@@ -35,8 +36,17 @@ void IniWindow::ShowGame()
 	board->Show(true);
 	board->SetFocus();
 	board->Start();
+	ShowLegend();
 	menu->Show(false);
 	character->Show(false);
+}
+
+void IniWindow::ShowLegend()
+{
+	wxMessageOutputDebug().Printf("Masuk IniLegend");
+	legend = new Legend(this, wxSize(410, 902), tetris, board);
+	legend->SetPosition(wxPoint(411, 0));
+	legend->Show(true);
 }
 
 void IniWindow::ShowCharMenu()
@@ -46,6 +56,7 @@ void IniWindow::ShowCharMenu()
 	character->SetPosition(wxPoint(0, 0));
 	character->Show(true);
 	menu->Show(false);
+	if (legend != nullptr) { legend->Show(false); }
 }
 
 void IniWindow::ShowGameOver()
@@ -56,6 +67,7 @@ void IniWindow::ShowGameOver()
 	if (board != nullptr) {board->Show(false);}
 	if (character != nullptr) {character->Show(false);}
 	if (menu != nullptr) {menu->Show(false);}
+	if (legend != nullptr) { legend->Show(false); }
 }
 
 void IniWindow::SetChar(int character)

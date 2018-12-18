@@ -3,6 +3,7 @@
 #include "Menu.h"
 #include "Character.h"
 #include "GameOver.h"
+#include "Legend.h"
 
 class Tetris;
 
@@ -18,10 +19,12 @@ public:
 	~IniWindow();
 	void InitComponents();
 	Board* board;
+	Legend* legend;
 	void SetChar(int character);
 	void ShowMenu();
 	void ShowGame();
 	void ShowCharMenu();
 	void ShowGameOver();
+	void ShowLegend();
 };
 

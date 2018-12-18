@@ -16,8 +16,13 @@ public:
 	void linesRemovedChanged(int numLines);
 
 	void SetSkill(int character);
+	int skill;
 
 	Tetris *parent;
+	
+	void DrawSquare(wxPaintDC &dc, int x, int y, Blocks shape);
+	Blocks & ShapeAt(int x, int y) { return board[(y * BoardWidth) + x]; }
+	Shape holdPiece;
 
 protected:
 	void OnPaint(wxPaintEvent& event);
@@ -27,7 +32,7 @@ protected:
 private:
 	enum { BoardWidth = 10, BoardHeight = 22 };
 
-	Blocks & ShapeAt(int x, int y) { return board[(y * BoardWidth) + x]; }
+
 
 	int SquareWidth() { return GetClientSize().GetWidth() / BoardWidth; }
 	int SquareHeight() { return GetClientSize().GetHeight() / BoardHeight; }
@@ -38,9 +43,8 @@ private:
 	void RemoveFullLines();
 	void NewPiece();
 	bool TryMove(const Shape& newPiece, int newX, int newY);
-	void DrawSquare(wxPaintDC &dc, int x, int y, Blocks shape);
 	void ActivateSkill(int skill);
-	int skill;
+	int GhostFunction();
 	wxTimer *timer;
 	bool isStarted;
 	bool isPaused;
@@ -53,7 +57,7 @@ private:
 	bool rotate;
 
 	Shape curPiece;
-	Shape holdPiece;
+
 	int curX;
 	int curY;
 	int gameTime;
