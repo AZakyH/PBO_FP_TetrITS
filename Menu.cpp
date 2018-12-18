@@ -14,7 +14,7 @@ Menu::Menu(wxWindow *window, wxSize panelSize, wxFrame *parent) :
 	wxPanel(window, wxID_ANY, wxPoint(0, 0), panelSize, wxBORDER_NONE)
 {
 	pWindow = (IniWindow*)window;
-
+	wxMessageOutputDebug().Printf(wxT("Masuk menu"));
 	this->SetBackgroundColour(wxColour(*wxWHITE));
 	
 	//membaca file JPEG untuk Background

@@ -17,14 +17,12 @@ private:
 public:
 	IniWindow(wxFrame *parent);
 	~IniWindow();
-	void InitComponents();
+
 	Board* board;
 	Legend* legend;
-	void SetChar(int character);
 	void ShowMenu();
-	void ShowGame();
+	void ShowGame(Board* board);
 	void ShowCharMenu();
 	void ShowGameOver();
-	void ShowLegend();
 };
 

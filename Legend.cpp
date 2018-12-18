@@ -3,42 +3,15 @@
 #include "Legend.h"
 #include "IniWindow.h"
 
-BEGIN_EVENT_TABLE(Legend, wxPanel)
-	EVT_PAINT(Legend::OnPaint)
-END_EVENT_TABLE()
-
 Legend::Legend(wxWindow *window, wxSize panelSize, wxFrame *parent, Board *board) :
 	wxPanel(window, wxID_ANY, wxPoint(820, 0), panelSize, wxBORDER_NONE)
 {
-	wxMessageOutputDebug().Printf("Masuk ke Legend");
 	papan = board;
-
-	LoadLegendBG();
 }
 
 Legend::~Legend()
 {
 	delete legendBG;
-}
-
-void Legend::LoadLegendBG()
-{
-	if (papan->skill == 0)
-	{
-		wxImage legendBGImage(wxT("Eli_Exp.jpg"), wxBITMAP_TYPE_JPEG);
-		legendBG = new wxBitmap(legendBGImage);
-	}
-	else if (papan->skill == 1)
-	{
-		wxImage legendBGImage(wxT("Pika_Exp.jpg"), wxBITMAP_TYPE_JPEG);
-		legendBG = new wxBitmap(legendBGImage);
-	}
-	else
-	{
-		wxImage legendBGImage(wxT("Hamta_Exp.jpg"), wxBITMAP_TYPE_JPEG);
-		legendBG = new wxBitmap(legendBGImage);
-	}
-	
 }
 
 void Legend::OnPaint(wxPaintEvent &event)
@@ -58,5 +31,6 @@ void Legend::OnPaint(wxPaintEvent &event)
 				papan->holdPiece.GetShape());
 		}
 	}
+
 	//papan->DrawSquare(legendDC, 180, 630, papan->holdPiece.GetShape());
 }

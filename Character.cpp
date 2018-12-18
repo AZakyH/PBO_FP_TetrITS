@@ -3,6 +3,9 @@
 #include "Character.h"
 #include "Tetris.h"
 #include "IniWindow.h"
+#include "Hamtaro.h"
+#include "Elizabeth.h"
+#include "Pikachu.h"
 
 BEGIN_EVENT_TABLE(Character, wxPanel)
 	EVT_PAINT(Character::OnPaint)
@@ -14,13 +17,10 @@ END_EVENT_TABLE()
 Character::Character(wxWindow *window, wxSize panelSize, wxFrame *parent) :
 	wxPanel(window, wxID_ANY, wxPoint(0, 0), panelSize, wxBORDER_NONE)
 {
+	pFrame = (Tetris*)parent;
 	pWindow = (IniWindow*)window;
 
 	this->SetBackgroundColour(wxColour(*wxWHITE));
-
-	//membaca file JPEG untuk Background
-	//wxImageHandler *jpegLoader = new wxJPEGHandler();
-	//wxImage::AddHandler(jpegLoader);
 
 	//load image
 	this->LoadCharMenuBG();
@@ -30,8 +30,6 @@ Character::Character(wxWindow *window, wxSize panelSize, wxFrame *parent) :
 	wxBitmapButton* ElizabethButton = new wxBitmapButton(this, 1005, *elizabethB, wxPoint(59, 344));
 	wxBitmapButton* PikachuButton = new wxBitmapButton(this, 1004, *pikachuB, wxPoint(304, 344));
 	wxBitmapButton* HamtaroButton = new wxBitmapButton(this, 1003, *hamtaroB, wxPoint(550, 344));
-
-
 }
 
 Character::~Character()
@@ -40,6 +38,7 @@ Character::~Character()
 	delete hamtaroB;
 	delete pikachuB;
 	delete elizabethB;
+	delete board;
 }
 
 void Character::LoadCharMenuBG()
@@ -69,19 +68,22 @@ void Character::OnPaint(wxPaintEvent & event)
 
 void Character::ElizabethButton(wxCommandEvent & event)
 {
-	pWindow->SetChar(0);
-	pWindow->ShowGame();
+	board = new Elizabeth(pWindow, wxSize(410, 902), pFrame);
+	board->SetPosition(wxPoint(0, 0));
+	pWindow->ShowGame((Board*)board);
 }
 
 void Character::PikachuButton(wxCommandEvent & event)
 {
-	pWindow->SetChar(1);
-	pWindow->ShowGame();
+	board = new Pikachu(pWindow, wxSize(410, 902), pFrame);
+	board->SetPosition(wxPoint(0, 0));
+	pWindow->ShowGame((Board*)board);
 }
 
 void Character::HamtaroButton(wxCommandEvent & event)
 {
-	pWindow->SetChar(2);
-	pWindow->ShowGame();
+	board = new Hamtaro(pWindow, wxSize(410, 902), pFrame);
+	board->SetPosition(wxPoint(0, 0));
+	pWindow->ShowGame((Board*)board);
 }
 

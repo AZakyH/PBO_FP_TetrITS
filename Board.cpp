@@ -1,6 +1,7 @@
 #include "Board.h"
 #include "Tetris.h"
 #include "IniWindow.h"
+#include "Legend.h"
 
 Board::Board(wxWindow *window, wxSize panel, wxFrame *parent)
 	: wxPanel(window, wxID_ANY, wxPoint(0, 0), panel, wxBORDER_NONE)
@@ -9,12 +10,7 @@ Board::Board(wxWindow *window, wxSize panel, wxFrame *parent)
 
 	pWindow = (IniWindow*)window;
 
-	//membaca file JPEG untuk Background
-	//wxImageHandler *jpegLoader = new wxJPEGHandler();
-	//wxImage::AddHandler(jpegLoader);
-
 	timer = new wxTimer(this, 1);
-	wxMessageOutputDebug().Printf("Timer?");
 	m_stsbar = parent->GetStatusBar();
 	m_stsbar->SetStatusText("0");
 	isFallingFinished = false;
@@ -76,25 +72,6 @@ void Board::Pause()
 		wxString str;
 		str.Printf(wxT("%d"), numLinesRemoved);
 		m_stsbar->SetStatusText(str);
-	}
-}
-
-void Board::LoadGameBG()
-{
-	if (skill == 0)
-	{
-		wxImage gameBGImage(wxT("ElizabethBG.jpg"), wxBITMAP_TYPE_JPEG);
-		gameBackGround = new wxBitmap(gameBGImage);
-	}
-	else if (skill == 1)
-	{
-		wxImage gameBGImage(wxT("PikachuBG.jpg"), wxBITMAP_TYPE_JPEG);
-		gameBackGround = new wxBitmap(gameBGImage);
-	}
-	else
-	{
-		wxImage gameBGImage(wxT("HamtaroBG.jpg"), wxBITMAP_TYPE_JPEG);
-		gameBackGround = new wxBitmap(gameBGImage);
 	}
 }
 
@@ -232,7 +209,7 @@ void Board::OnKeyDown(wxKeyEvent& event)
 		if (!isHold) {
 			isHold = true;
 			NewPiece();
-			pWindow->legend->Refresh();
+			legend->Refresh();
 		}
 		break;
 	default:
@@ -337,7 +314,7 @@ void Board::RemoveFullLines()
 		}
 		if (numLinesRemoved >= nextSkill) {
 			nextSkill += 10;
-			ActivateSkill(skill);
+			ActivateSkill();
 		}
 		wxString str;
 		str.Printf(wxT("%d"), numLinesRemoved);
@@ -389,6 +366,7 @@ void Board::NewPiece()
 		wxString str;
 		str.Printf(wxT("Game Over, your score is %d"), numLinesRemoved);
 		m_stsbar->SetStatusText(str);
+		legend->~Legend();
 		pWindow->ShowGameOver();
 	}
 }
@@ -452,23 +430,6 @@ bool Board::TryMove(const Shape& newPiece, int newX, int newY)
 	curY = newY;
 	Refresh();
 	return true;
-}
-
-void Board::ActivateSkill(int skill) {
-	if (skill == 0) { // skill Elizabeth
-		counter = 10;
-		extraShape = true;
-	}
-	else if (skill == 1) { // skill Pikachu
-		counter = 3;
-		extraLine = true;
-	}
-	else { // skill Hamtaro
-		for (int k = 0; k < BoardHeight - 4; ++k) {
-			for (int j = 0; j < BoardWidth; ++j)
-				ShapeAt(j, k) = ShapeAt(j, k + 4);
-		}
-	}
 }
 
 void Board::SetSkill(int character)

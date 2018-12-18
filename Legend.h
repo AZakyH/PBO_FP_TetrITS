@@ -12,11 +12,11 @@ public:
 	~Legend();
 
 	void OnPaint(wxPaintEvent &event);
+protected:
+	wxBitmap *legendBG;
+	virtual void LoadLegendBG() = 0;
 private:
 	Board* papan;
-	wxBitmap *legendBG;
 
-	DECLARE_EVENT_TABLE()
-	void LoadLegendBG();
 };
 

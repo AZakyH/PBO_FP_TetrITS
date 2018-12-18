@@ -10,4 +10,5 @@ public:
 	wxStatusBar *sb = CreateStatusBar();
 private:
 	IniWindow *window;
+	wxBitmap* logo;
 };

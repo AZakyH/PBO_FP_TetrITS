@@ -5,6 +5,7 @@
 #include <wx/wx.h>
 
 class Tetris;
+class Legend;
 class IniWindow;
 
 class Board : public wxPanel
@@ -19,6 +20,7 @@ public:
 	int skill;
 
 	Tetris *parent;
+	Legend* legend = nullptr;
 	
 	void DrawSquare(wxPaintDC &dc, int x, int y, Blocks shape);
 	Blocks & ShapeAt(int x, int y) { return board[(y * BoardWidth) + x]; }
@@ -28,12 +30,15 @@ protected:
 	void OnPaint(wxPaintEvent& event);
 	void OnKeyDown(wxKeyEvent& event);
 	void OnTimer(wxCommandEvent& event);
+	enum { BoardWidth = 10, BoardHeight = 22 };
+	wxBitmap* gameBackGround = nullptr;
+	virtual void LoadGameBG() = 0;
+	
+	int counter;
+	bool extraLine;
+	bool extraShape;
 
 private:
-	enum { BoardWidth = 10, BoardHeight = 22 };
-
-
-
 	int SquareWidth() { return GetClientSize().GetWidth() / BoardWidth; }
 	int SquareHeight() { return GetClientSize().GetHeight() / BoardHeight; }
 	void ClearBoard();
@@ -43,16 +48,13 @@ private:
 	void RemoveFullLines();
 	void NewPiece();
 	bool TryMove(const Shape& newPiece, int newX, int newY);
-	void ActivateSkill(int skill);
+	virtual void ActivateSkill() = 0;
 	int GhostFunction();
 	wxTimer *timer;
 	bool isStarted;
 	bool isPaused;
 	bool isFallingFinished;
 	bool isHold;
-
-	bool extraLine;
-	bool extraShape;
 
 	bool rotate;
 
@@ -63,13 +65,10 @@ private:
 	int gameTime;
 	int nextLevel;
 	int numLinesRemoved;
-	int counter;
 	int nextSkill;
 	Blocks board[BoardWidth * BoardHeight];
 	wxStatusBar *m_stsbar;
 
-	wxBitmap* gameBackGround = nullptr;
-	void LoadGameBG();
 
 	IniWindow* pWindow;
 };

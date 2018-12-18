@@ -16,14 +16,6 @@ GameOver::GameOver(IniWindow *window, wxSize panelSize, wxFrame *parent) :
 
 	this->SetBackgroundColour(wxColour(*wxWHITE));
 
-	//membaca file JPEG untuk Background
-	wxImageHandler *jpegLoader = new wxJPEGHandler();
-	wxImage::AddHandler(jpegLoader);
-
-	//membaca file png untuk Button
-	wxImageHandler *pngLoader = new wxPNGHandler();
-	wxImage::AddHandler(pngLoader);
-
 	//load image
 	this->LoadGameOverBG();
 	this->LoadButtons();
@@ -60,5 +52,7 @@ void GameOver::OnPaint(wxPaintEvent &event)
 
 void GameOver::MenuButton(wxCommandEvent & event)
 {
+	wxMessageOutputDebug().Printf(wxT("Masuk menu"));
 	pWindow->ShowMenu();
+	wxMessageOutputDebug().Printf(wxT("Keluar menu"));
 }
